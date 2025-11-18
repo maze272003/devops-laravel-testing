@@ -4,7 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export default function GalleryIndex({ items }: { items: any[] }) {
+// --- Type Definition Fix ---
+/**
+ * Defines the structure for an individual gallery item received from the server.
+ */
+interface GalleryItem {
+    id: number;
+    title: string;
+    image_path: string;
+    // Add other properties if your item includes them (e.g., created_at, user_id)
+}
+
+// Update the function signature to use the specific type
+export default function GalleryIndex({ items }: { items: GalleryItem[] }) {
+// ---------------------------
+
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
         image: null as File | null, // Initialize as null
