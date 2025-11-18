@@ -1,46 +1,30 @@
 import { Head, useForm } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout from '@/layouts/app-layout'; // Adjust based on your layout name
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormEventHandler } from 'react';
 
-// 1. Define the structure of your data
-interface GalleryItem {
-    id: number;
-    title: string;
-    image_path: string;
-    created_at: string;
-    updated_at: string;
-}
-
-interface GalleryIndexProps {
-    items: GalleryItem[];
-}
-
-// 2. Use the interface instead of 'any'
-export default function GalleryIndex({ items }: GalleryIndexProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<{
-        title: string;
-        image: File | null;
-    }>({
+export default function GalleryIndex({ items }: { items: any[] }) {
+    const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
-        image: null,
+        image: null as File | null, // Initialize as null
     });
 
-    const submit: FormEventHandler = (e) => {
+    const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('gallery.store'), {
+        // Inertia automatically converts this to FormData because of the file
+        post('/gallery', {
             onSuccess: () => reset(),
         });
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Gallery', href: route('gallery.index') }]}>
+        <AppLayout breadcrumbs={[{ title: 'Gallery', href: '/gallery' }]}>
             <Head title="Gallery" />
 
             <div className="p-6 max-w-4xl mx-auto space-y-8">
                 
+                {/* Upload Form */}
                 <div className="bg-white p-6 rounded-lg shadow border">
                     <h2 className="text-lg font-bold mb-4">Upload New Image</h2>
                     <form onSubmit={submit} className="space-y-4">
@@ -59,7 +43,6 @@ export default function GalleryIndex({ items }: GalleryIndexProps) {
                             <Input
                                 id="image"
                                 type="file"
-                                accept="image/*"
                                 onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)}
                             />
                             {errors.image && <div className="text-red-500 text-sm">{errors.image}</div>}
@@ -71,16 +54,18 @@ export default function GalleryIndex({ items }: GalleryIndexProps) {
                     </form>
                 </div>
 
+                {/* Display Images */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {items.map((item) => (
-                        <div key={item.id} className="border rounded-lg overflow-hidden bg-white shadow-sm">
+                        <div key={item.id} className="border rounded-lg overflow-hidden">
+                            {/* Note: Ensure you ran 'php artisan storage:link' */}
                             <img 
                                 src={`/storage/${item.image_path}`} 
                                 alt={item.title} 
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4">
-                                <h3 className="font-medium text-gray-900">{item.title}</h3>
+                                <h3 className="font-medium">{item.title}</h3>
                             </div>
                         </div>
                     ))}
