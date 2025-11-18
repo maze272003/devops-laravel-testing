@@ -1,0 +1,22 @@
+---
+deployment:
+  tasks:
+    # 1. Set the path directly to your public_html folder based on your terminal output
+    - export DEPLOYPATH=/home/u602345745/domains/hostcluster.site/public_html
+
+    # 2. Copy all files from the repository to the folder
+    # Ang -R ay recursive copy
+    - /bin/cp -R * $DEPLOYPATH
+
+    # 3. Go to the directory
+    - cd $DEPLOYPATH
+
+    # 4. Execute Migration
+    # WARNING: 'migrate:fresh' will WIPE ALL DATA. Use 'migrate' only if you want to keep data.
+    # Palitan ang 'php82' kung naka 8.3 or 8.1 ka.
+    - /opt/alt/php82/usr/bin/php artisan migrate:fresh --force
+
+    # 5. Clear Caches (Optional pero recommended after deploy)
+    - /opt/alt/php82/usr/bin/php artisan config:cache
+    - /opt/alt/php82/usr/bin/php artisan route:cache
+    - /opt/alt/php82/usr/bin/php artisan view:cache
