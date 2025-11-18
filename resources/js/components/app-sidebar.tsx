@@ -13,7 +13,8 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+// 1. Import a new icon (e.g., Image or ImageIcon)
+import { BookOpen, Folder, LayoutGrid, Image as ImageIcon } from 'lucide-react'; 
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -21,6 +22,12 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    // 2. Add your new Nav Item here
+    {
+        title: 'Gallery',
+        href: '/gallery', // We will create this route in Step 2
+        icon: ImageIcon,
     },
 ];
 
