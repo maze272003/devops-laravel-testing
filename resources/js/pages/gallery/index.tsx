@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-// --- Type Definition Fix ---
+// --- Updated Type Definition ---
 /**
  * Defines the structure for an individual gallery item received from the server.
  */
@@ -12,12 +12,12 @@ interface GalleryItem {
     id: number;
     title: string;
     image_path: string;
-    // Add other properties if your item includes them (e.g., created_at, user_id)
+    // New property provided by the Laravel Model Accessor
+    image_url: string; 
 }
+// -------------------------------
 
-// Update the function signature to use the specific type
 export default function GalleryIndex({ items }: { items: GalleryItem[] }) {
-// ---------------------------
 
     const { data, setData, post, processing, errors, reset } = useForm({
         title: '',
@@ -72,9 +72,9 @@ export default function GalleryIndex({ items }: { items: GalleryItem[] }) {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {items.map((item) => (
                         <div key={item.id} className="border rounded-lg overflow-hidden">
-                            {/* Note: Ensure you ran 'php artisan storage:link' */}
+                            {/* FIX: Using the full URL provided by the Laravel Accessor */}
                             <img 
-                                src={`/storage/${item.image_path}`} 
+                                src={item.image_url} 
                                 alt={item.title} 
                                 className="w-full h-48 object-cover"
                             />
